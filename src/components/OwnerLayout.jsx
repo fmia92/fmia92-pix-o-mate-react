@@ -12,16 +12,14 @@ export function OwnerLayout () {
     const { increaseKilledCats } = useMataGatos();
     const { favoritesData, setFavoritesData } = useFavouritesOwners();
 
+    const generateRamdomTimestamp = () => {
+        const from = new Date('2020-01-01').getTime();
+        const now = new Date().getTime();
 
-    const getFavouritesList = () => {
-        console.log("getFavouritesList");
-        console.log(favoritesData);
+        const random = Math.floor(Math.random() * (now - from) + from);
+        return random;
     };
-    
-    useEffect(() => {
-        getFavouritesList();
-    }, []);
-    
+
     const url = `https://gorest.co.in/public/v2/users?page=1&per_page=${perPages}`;
     const fechOwners = () => {
         fetch(url, {
@@ -41,6 +39,9 @@ export function OwnerLayout () {
             .then((data) => {
                 console.log({
                     data
+                });
+                data.map((owner) => {
+                    owner.created_at = generateRamdomTimestamp();
                 });
                 setOwners(data);
                 setLoading(false);

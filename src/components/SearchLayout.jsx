@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { OwnerDetails } from "./OwnerDetails";
 import { OwnerItem } from "./OwnerItem";
 import { useMataGatos } from "../context/mataGatosContext";
+import { useFavouritesOwners } from "../context/favouritesOwnersContext";
+import { Link } from "wouter";
 
 export function SearchLayout() {
     const [owners, setOwners] = useState([]);
@@ -10,19 +12,20 @@ export function SearchLayout() {
     const [perPages, setPerPages] = useState(10);
     const [searchVisible, setSearchVisible] = useState(false);
     const [searchText, setSearchText] = useState("");
-    const [favouritesList, setFavouritesList] = useState([]);
     const { increaseKilledCats } = useMataGatos();
+    const { favoritesData, setFavoritesData } = useFavouritesOwners();
 
-    useEffect(() => {
-        const favouritesList = JSON.parse(localStorage.getItem("favoritesList"));
-        if (favouritesList) {
-            setFavouritesList(favouritesList);
-        }
-    }, []);
+    // useEffect(() => {
+    //     localStorage.setItem("favoritesList", JSON.stringify(favouritesList));
+    // }, [favouritesList]);
 
-    useEffect(() => {
-        localStorage.setItem("favoritesList", JSON.stringify(favouritesList));
-    }, [favouritesList]);
+    const generateRamdomTimestamp = () => {
+        const from = new Date('2020-01-01').getTime();
+        const now = new Date().getTime();
+
+        const random = Math.floor(Math.random() * (now - from) + from);
+        return random;
+    };
 
     const url = searchText 
         ? `https://gorest.co.in/public/v2/users?name=${searchText}&page=1&per_page=${perPages}`
@@ -46,6 +49,9 @@ export function SearchLayout() {
             .then((data) => {
                 console.log({
                     data
+                });
+                data.map((owner) => {
+                    owner.created_at = generateRamdomTimestamp();
                 });
                 setOwners(data);
                 setLoading(false);
@@ -86,11 +92,11 @@ export function SearchLayout() {
     };
 
     const handleFavouriteEvent = () => {
-        const isFavorite = favouritesList.some((item) => item.id === selectedOwner.id)
+        const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
         if (isFavorite) {
             return;
         }
-        setFavouritesList( prev => [...prev, selectedOwner])
+        setFavoritesData(prevState => [...prevState, selectedOwner]);
         setSelectedOwner(null);
     };
     
@@ -111,6 +117,7 @@ export function SearchLayout() {
                         >
                         Buscar
                     </button>
+                <Link href="/owners">IR</Link>
                 </div>
                 {
                     loading 
@@ -122,7 +129,7 @@ export function SearchLayout() {
                               <OwnerItem
                                 key={owner.id}
                                 owner={owner}
-                                isFavourite={favouritesList.some((item) => item.id === owner.id)}
+                                isFavourite={favoritesData.some((item) => item.id === owner.id)}
                                 onOwnerClick={handleSelectOwner}
                             />
                             ))}
