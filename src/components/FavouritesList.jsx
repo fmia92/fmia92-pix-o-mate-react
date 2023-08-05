@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
+import { useFavouritesOwners } from "../context/favouritesOwnersContext";
 
 export function FavouritesList ({ onClose }) {
-    const [favoritesData, setFavoritesData] = useState([]);
-
-    useEffect(() => {
-        const favoritesList = JSON.parse(localStorage.getItem("favoritesList"));
-        if (favoritesList) {
-            setFavoritesData(favoritesList);
-        }
-    }, []);
+    const { favoritesData, removeFavouriteOwner } = useFavouritesOwners();
 
     const handleDeleteFavorite = (id) => {
-        console.log({id});
-        const newData = favoritesData.filter((favorite) => favorite.id !== id);
-        localStorage.setItem("favoritesList", JSON.stringify(newData));
-        setFavoritesData(newData);
+        removeFavouriteOwner(id);
     };
     
     return (
