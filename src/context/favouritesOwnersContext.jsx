@@ -19,9 +19,7 @@ export const FavouritesOwnersProvider = ({ children }) => {
     };
 
     const removeFavouriteOwner = (id) => {
-        const newData = favoritesData.filter((favorite) => favorite.id !== id);
-        localStorage.setItem("favoritesList", JSON.stringify(newData));
-        setFavoritesData(newData);
+        setFavoritesData(prevState => prevState.filter((owner) => owner.id !== id));
     };
 
     return (
