@@ -2,30 +2,25 @@ import { useEffect, useState } from "react";
 import { OwnerItem } from "./OwnerItem";
 import { OwnerDetails } from "./OwnerDetails";
 import { useMataGatos } from "../context/mataGatosContext";
+import { useFavouritesOwners } from "../context/favouritesOwnersContext";
 
 export function OwnerLayout () {
     const [owners, setOwners] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedOwner, setSelectedOwner] = useState(null);
     const [perPages, setPerPages] = useState(10);
-    const [favouritesList, setFavouritesList] = useState([]);
     const { increaseKilledCats } = useMataGatos();
+    const { favoritesData, setFavoritesData } = useFavouritesOwners();
 
 
     const getFavouritesList = () => {
-        const list = JSON.parse(localStorage.getItem("favoritesList"));
-        if (list) {
-            setFavouritesList(list);
-        }
+        console.log("getFavouritesList");
+        console.log(favoritesData);
     };
     
     useEffect(() => {
         getFavouritesList();
     }, []);
-
-    useEffect(() => {
-        localStorage.setItem("favoritesList", JSON.stringify(favouritesList));
-    }, [favouritesList]);
     
     const url = `https://gorest.co.in/public/v2/users?page=1&per_page=${perPages}`;
     const fechOwners = () => {
@@ -75,15 +70,12 @@ export function OwnerLayout () {
     };
 
     const handleFavouriteEvent = () => {
-        const isFavorite = favouritesList.some((item) => item.id === selectedOwner.id)
+        const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
         if (isFavorite) {
             return;
         }
-        console.log({selectedOwner});
-        setFavouritesList( prev => [...prev, selectedOwner])
-        localStorage.setItem("favoritesList", JSON.stringify(favouritesList));
+        setFavoritesData(prevState => [...prevState, selectedOwner]);
         setSelectedOwner(null);
-        console.log({favouritesList});
     };
     
     return (
@@ -99,7 +91,7 @@ export function OwnerLayout () {
                                 <OwnerItem
                                     key={owner.id}
                                     owner={owner}
-                                    isFavourite={favouritesList.some((item) => item.id === owner.id)}
+                                    isFavourite={favoritesData.some((item) => item.id === owner.id)}
                                     onOwnerClick={handleSelectOwner}
                                 />
                             ))}
