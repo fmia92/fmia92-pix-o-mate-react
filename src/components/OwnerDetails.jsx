@@ -1,31 +1,39 @@
-import { useEffect, useState } from "react";
-
 export function OwnerDetails ({ owner, onClose, onSelectFavourite }) {
-    const [favouritesList, setFavouritesList] = useState([]);
-
-    useEffect(() => {
-        const favoritesList = localStorage.getItem("favoritesList");
-        if (favoritesList) {
-            setFavouritesList(JSON.parse(favoritesList));
-        }
-    }, []);
-
     if (!owner) {
       return null;
     }
 
-    if (!owner.created_at) {
-        owner.created_at = new Date().getTime();
+    const DATE_UNITS = {
+        year: 31536000,
+        month: 2629800,
+        day: 86400,
+        hour: 3600,
+        minute: 60,
+        second: 1
+    }    
+
+    const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+
+    const getRelativeTime = (epochTime) => {
+        const start = epochTime;
+        const now = new Date().getTime();
+
+        const elapsed = (start - now) / 1000;
+
+        for (const unit in DATE_UNITS) {
+            const absoluteValue = Math.abs(elapsed)
+            if (absoluteValue > DATE_UNITS[unit] || unit === 'second') {
+                return rtf.format(
+                    Math.floor(elapsed / DATE_UNITS[unit]),
+                    unit
+                )
+            }
+        }
+        return '';
     }
 
-    const formatTimeStamptoDate = (timestamp) => {
-        const date = new Date(timestamp);
-        const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-        const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-  
+    console.log({owner});
+
     return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-4 rounded">
@@ -33,13 +41,15 @@ export function OwnerDetails ({ owner, onClose, onSelectFavourite }) {
           <p>{owner.status}</p>
           <p>{owner.gender}</p>
           <p>{owner.email}</p>
-          <p>{formatTimeStamptoDate(owner.created_at)}</p>
-          <button onClick={onSelectFavourite} className="bg-blue-500 text-white mt-2 px-4 py-2 rounded">
-            Añadir a Favoritos
-          </button>
-          <button onClick={onClose} className="bg-red-500 text-white mt-2 px-4 py-2 rounded">
-            Cerrar
-          </button>
+          <p>{getRelativeTime(owner.created_at)}</p>
+          <div className="flex gap-2">
+            <button onClick={onSelectFavourite} className="bg-blue-500 text-white mt-2 px-4 py-2 rounded">
+                Añadir a Favoritos
+            </button>
+            <button onClick={onClose} className="bg-red-500 text-white mt-2 px-4 py-2 rounded">
+                Cerrar
+            </button>
+          </div>
         </div>
       </div>
     );
