@@ -27,21 +27,33 @@ export function OwnerLayout () {
         setSelectedOwner(null);
     };
 
-    const handleScroll = useCallback(() => {
-        // Cargar más dueños cuando el usuario ha llegado al final de la página
-        if (
-          window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 200 && hasMoreData
-        ) {
-            setPage((prev) => prev + 1);
+    const debouncedSetPage = useCallback(
+        debounce(() => {
+          setPage((prev) => prev + 1);
+        }, 200),
+        []
+      );
+
+      const handleScroll = useCallback(() => {
+        if (hasMoreData && !loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+          debouncedSetPage();
         }
-    }, [hasMoreData, setPage]);
+      }, [hasMoreData, loading, debouncedSetPage]);
 
     useEffect(() => {
         // Escuchar el evento scroll para cargar más dueños cuando sea necesario
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, [handleScroll]);
+
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+          const context = this;
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
 
     return (
         <section className="flex flex-col items-center justify-center h-full p-4">
