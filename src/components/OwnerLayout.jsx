@@ -1,61 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { OwnerItem } from "./OwnerItem";
 import { OwnerDetails } from "./OwnerDetails";
-import { useMataGatos } from "../context/mataGatosContext";
 import { useFavouritesOwners } from "../context/favouritesOwnersContext";
+import { useFetchOwners } from "../hooks/useFetchOwners";
 
 export function OwnerLayout () {
-    const [owners, setOwners] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [selectedOwner, setSelectedOwner] = useState(null);
     const [perPages, setPerPages] = useState(10);
-    const { increaseKilledCats } = useMataGatos();
     const { favoritesData, setFavoritesData } = useFavouritesOwners();
-
-    const generateRamdomTimestamp = () => {
-        const from = new Date('2020-01-01').getTime();
-        const now = new Date().getTime();
-
-        const random = Math.floor(Math.random() * (now - from) + from);
-        return random;
-    };
-
-    const url = `https://gorest.co.in/public/v2/users?page=1&per_page=${perPages}`;
-    const fechOwners = () => {
-        fetch(url, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json, charset=UTF-8",
-                    "Authorization": "Bearer 61cb4c2c7bf7096f606410c9f450b345f49b62dad96126720505faefd448f350"
-                }
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Algo salió mal...");
-                }
-                increaseKilledCats();
-                return response.json();
-            })
-            .then((data) => {
-                console.log({
-                    data
-                });
-                data.map((owner) => {
-                    owner.created_at = generateRamdomTimestamp();
-                });
-                setOwners(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                console.log(error)
-            });
-        };
-
-    useEffect(() => {
-        fechOwners();
-    }, [perPages]);
-
+    const { owners, loading } = useFetchOwners({ perPages });
    
     const handleSelectOwner = (owner) => {
         setSelectedOwner(owner);
