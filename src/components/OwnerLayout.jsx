@@ -35,7 +35,7 @@ export function OwnerLayout () {
       );
 
       const handleScroll = useCallback(() => {
-        if (hasMoreData && !loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+        if (hasMoreData && !loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 400) {
           debouncedSetPage();
         }
       }, [hasMoreData, loading, debouncedSetPage]);
