@@ -15,6 +15,8 @@ export function useFetchOwners({ searchText }) {
     const [loading, setLoading] = useState(true);
     const { increaseKilledCats } = useMataGatos();
     const [page, setPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [loadingMoreData, setLoadingMoreData] = useState(false);
                 
     useEffect(() => {
         console.log("useFetchOwners");
@@ -22,7 +24,10 @@ export function useFetchOwners({ searchText }) {
             ? `https://gorest.co.in/public/v2/users?name=${searchText}&page=${page}&per_page=10`
             : `https://gorest.co.in/public/v2/users?page=${page}&per_page=10`
 
-        fetch(url, {
+        if (loadingMoreData) return;
+        setLoadingMoreData(true);
+
+        hasMoreData && fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json, charset=UTF-8",
@@ -30,24 +35,28 @@ export function useFetchOwners({ searchText }) {
             }
         })
         .then((response) => {
+            increaseKilledCats();
             if (!response.ok) {
                 throw new Error("Algo salió mal...");
             }
-            increaseKilledCats();
             return response.json();
         })
         .then((data) => {
-            console.log({
-                data
-            });
-            data.map((owner) => {
-                owner.created_at = generateRamdomTimestamp();
-            });
-            setOwners((prev => page > 1 ? [...prev, ...data] : data));
+            if (data.length > 0) {
+                data.map((owner) => {
+                    owner.created_at = generateRamdomTimestamp();
+                });
+                setOwners((prev => page > 1 ? [...prev, ...data] : data));
+            } else {
+                setHasMoreData(false);
+            }
+                
             setLoading(false);
+            setLoadingMoreData(false);
         })
         .catch((error) => {
             setLoading(false);
+            setLoadingMoreData(false);
             console.log(error)
         });
     }, [page, searchText]);
@@ -55,7 +64,9 @@ export function useFetchOwners({ searchText }) {
     return {
         owners,
         loading,
-        setPage
+        setPage,
+        hasMoreData,
+        setHasMoreData
     };
 }
 

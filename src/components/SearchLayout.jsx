@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { OwnerDetails } from "./OwnerDetails";
 import { OwnerItem } from "./OwnerItem";
 import { useFavouritesOwners } from "../context/favouritesOwnersContext";
@@ -10,7 +10,7 @@ export function SearchLayout() {
     const [searchText, setSearchText] = useState("");
     const { favoritesData, setFavoritesData } = useFavouritesOwners();
     const debounceSearchText = useDebounce(searchText, 500);
-    const { owners, loading, setPage } = useFetchOwners({ searchText: debounceSearchText });
+    const { owners, loading, setPage, hasMoreData, setHasMoreData } = useFetchOwners({ searchText: debounceSearchText });
 
 
     // useEffect(() => {
@@ -35,31 +35,33 @@ export function SearchLayout() {
     };
 
     const handleChangeSearchText = (e) => {
+        console.log(e.target.value);
         if (e.target.value.length >= 2) {
             setSearchText(e.target.value.trim());
+            setHasMoreData(true);
             setPage(1);
         } else if (e.target.value.length === 0) {
             setSearchText("");
+            setHasMoreData(true);
             setPage(1);
         }
     };
 
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         // Cargar más dueños cuando el usuario ha llegado al final de la página
         if (
           window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 200
+          document.body.offsetHeight - 200 && hasMoreData
         ) {
             setPage((prev) => prev + 1);
         }
-      };
+    }, [hasMoreData, setPage]);
 
-      useEffect(() => {
+    useEffect(() => {
         // Escuchar el evento scroll para cargar más dueños cuando sea necesario
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-      }, []);
-
+    }, [handleScroll]);
     
     return (
         <section className="flex flex-col items-center justify-center h-full p-4">
