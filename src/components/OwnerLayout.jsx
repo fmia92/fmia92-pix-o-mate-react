@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OwnerItem } from "./OwnerItem";
 import { OwnerDetails } from "./OwnerDetails";
 import { useFavouritesOwners } from "../context/favouritesOwnersContext";
@@ -6,9 +6,8 @@ import { useFetchOwners } from "../hooks/useFetchOwners";
 
 export function OwnerLayout () {
     const [selectedOwner, setSelectedOwner] = useState(null);
-    const [perPages, setPerPages] = useState(10);
     const { favoritesData, setFavoritesData } = useFavouritesOwners();
-    const { owners, loading } = useFetchOwners({ perPages });
+    const { owners, loading, setPage } = useFetchOwners({ searchText: "" });
    
     const handleSelectOwner = (owner) => {
         setSelectedOwner(owner);
@@ -19,10 +18,6 @@ export function OwnerLayout () {
 
     };
 
-    const handleLoadMore = () => {
-        setPerPages(perPages + 10);
-    };
-
     const handleFavouriteEvent = () => {
         const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
         if (isFavorite) {
@@ -31,6 +26,23 @@ export function OwnerLayout () {
         setFavoritesData(prevState => [...prevState, selectedOwner]);
         setSelectedOwner(null);
     };
+
+    const handleScroll = () => {
+        // Cargar más dueños cuando el usuario ha llegado al final de la página
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200
+        ) {
+            setPage((prev) => prev + 1);
+        }
+      };
+
+      useEffect(() => {
+        // Escuchar el evento scroll para cargar más dueños cuando sea necesario
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+
     
     return (
         <section className="flex flex-col items-center justify-center h-full p-4">
@@ -49,11 +61,6 @@ export function OwnerLayout () {
                                     onOwnerClick={handleSelectOwner}
                                 />
                             ))}
-                            <button 
-                                onClick={handleLoadMore}
-                                className="bg-blue-500 text-white py-2 px-4 rounded mt-4">
-                                Ver más
-                            </button>
                         </div>
                         </>
                     )

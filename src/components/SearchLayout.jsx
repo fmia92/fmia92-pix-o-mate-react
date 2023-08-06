@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { OwnerDetails } from "./OwnerDetails";
 import { OwnerItem } from "./OwnerItem";
 import { useFavouritesOwners } from "../context/favouritesOwnersContext";
@@ -7,11 +7,10 @@ import { useFetchOwners } from "../hooks/useFetchOwners";
 
 export function SearchLayout() {
     const [selectedOwner, setSelectedOwner] = useState(null);
-    const [perPages, setPerPages] = useState(10);
     const [searchText, setSearchText] = useState("");
     const { favoritesData, setFavoritesData } = useFavouritesOwners();
     const debounceSearchText = useDebounce(searchText, 500);
-    const { owners, loading } = useFetchOwners({ searchText: debounceSearchText, perPages });
+    const { owners, loading, setPage } = useFetchOwners({ searchText: debounceSearchText });
 
 
     // useEffect(() => {
@@ -26,10 +25,6 @@ export function SearchLayout() {
         setSelectedOwner(null);
     };
 
-    const handleLoadMore = () => {
-        setPerPages(perPages + 10);
-    };
-
     const handleFavouriteEvent = () => {
         const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
         if (isFavorite) {
@@ -38,6 +33,33 @@ export function SearchLayout() {
         setFavoritesData(prevState => [...prevState, selectedOwner]);
         setSelectedOwner(null);
     };
+
+    const handleChangeSearchText = (e) => {
+        if (e.target.value.length >= 2) {
+            setSearchText(e.target.value.trim());
+            setPage(1);
+        } else if (e.target.value.length === 0) {
+            setSearchText("");
+            setPage(1);
+        }
+    };
+
+    const handleScroll = () => {
+        // Cargar más dueños cuando el usuario ha llegado al final de la página
+        if (
+          window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200
+        ) {
+            setPage((prev) => prev + 1);
+        }
+      };
+
+      useEffect(() => {
+        // Escuchar el evento scroll para cargar más dueños cuando sea necesario
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+      }, []);
+
     
     return (
         <section className="flex flex-col items-center justify-center h-full p-4">
@@ -46,7 +68,7 @@ export function SearchLayout() {
                     <input
                     type="text"
                     placeholder="Buscar Dueño..."
-                    onChange={(e) => setSearchText(e.target.value.trim())}
+                    onChange={handleChangeSearchText}
                     className="p-2 border rounded w-full"
                     />
                 </div>
@@ -64,11 +86,6 @@ export function SearchLayout() {
                                 onOwnerClick={handleSelectOwner}
                             />
                             ))}
-                            <button 
-                                onClick={handleLoadMore}
-                                className="bg-blue-500 text-white py-2 px-4 rounded mt-4">
-                                Ver más
-                            </button>
                         </div>
                         </>
                     )

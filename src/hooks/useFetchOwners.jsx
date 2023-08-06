@@ -10,15 +10,17 @@ const generateRamdomTimestamp = () => {
 };
 
 
-export function useFetchOwners({ searchText, perPages}) {
+export function useFetchOwners({ searchText }) {
     const [owners, setOwners] = useState([]);
     const [loading, setLoading] = useState(true);
     const { increaseKilledCats } = useMataGatos();
+    const [page, setPage] = useState(1);
                 
     useEffect(() => {
+        console.log("useFetchOwners");
         const url = searchText 
-        ? `https://gorest.co.in/public/v2/users?name=${searchText}&page=1&per_page=${perPages}`
-        : `https://gorest.co.in/public/v2/users?page=1&per_page=${perPages}`;
+            ? `https://gorest.co.in/public/v2/users?name=${searchText}&page=${page}&per_page=10`
+            : `https://gorest.co.in/public/v2/users?page=${page}&per_page=10`
 
         fetch(url, {
             method: "GET",
@@ -41,18 +43,19 @@ export function useFetchOwners({ searchText, perPages}) {
             data.map((owner) => {
                 owner.created_at = generateRamdomTimestamp();
             });
-            setOwners(data);
+            setOwners((prev => page > 1 ? [...prev, ...data] : data));
             setLoading(false);
         })
         .catch((error) => {
             setLoading(false);
             console.log(error)
         });
-    }, [perPages, searchText]);
+    }, [page, searchText]);
 
     return {
         owners,
-        loading
+        loading,
+        setPage
     };
 }
 
