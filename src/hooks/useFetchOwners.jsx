@@ -19,6 +19,7 @@ export function useFetchOwners({ searchText }) {
     const [loadingMoreData, setLoadingMoreData] = useState(false);
                 
     useEffect(() => {
+        console.log({page})
         console.log("useFetchOwners");
         const url = searchText 
             ? `https://gorest.co.in/public/v2/users?name=${searchText}&page=${page}&per_page=10`
@@ -27,38 +28,40 @@ export function useFetchOwners({ searchText }) {
         if (loadingMoreData) return;
         setLoadingMoreData(true);
 
-        hasMoreData && fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json, charset=UTF-8",
-                "Authorization": "Bearer 61cb4c2c7bf7096f606410c9f450b345f49b62dad96126720505faefd448f350"
-            }
-        })
-        .then((response) => {
-            increaseKilledCats();
-            if (!response.ok) {
-                throw new Error("Algo salió mal...");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.length > 0) {
-                data.map((owner) => {
-                    owner.created_at = generateRamdomTimestamp();
-                });
-                setOwners((prev => page > 1 ? [...prev, ...data] : data));
-            } else {
-                setHasMoreData(false);
-            }
-                
-            setLoading(false);
-            setLoadingMoreData(false);
-        })
-        .catch((error) => {
-            setLoading(false);
-            setLoadingMoreData(false);
-            console.log(error)
-        });
+        if (!loadingMoreData && hasMoreData) {
+            fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json, charset=UTF-8",
+                    "Authorization": "Bearer 61cb4c2c7bf7096f606410c9f450b345f49b62dad96126720505faefd448f350"
+                }
+            })
+            .then((response) => {
+                increaseKilledCats();
+                if (!response.ok) {
+                    throw new Error("Algo salió mal...");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.length > 0) {
+                    data.map((owner) => {
+                        owner.created_at = generateRamdomTimestamp();
+                    });
+                    setOwners((prev => page > 1 ? [...prev, ...data] : data));
+                } else {
+                    setHasMoreData(false);
+                }
+                    
+                setLoading(false);
+                setLoadingMoreData(false);
+            })
+            .catch((error) => {
+                setLoading(false);
+                setLoadingMoreData(false);
+                console.log(error)
+            });
+        }
     }, [page, searchText]);
 
     return {
