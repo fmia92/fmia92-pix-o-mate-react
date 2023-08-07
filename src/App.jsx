@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { FavouritesList } from './components/FavouritesList';
 import { MataGatosProvider } from './context/mataGatosContext';
 import { FavouritesOwnersProvider } from './context/favouritesOwnersContext';
+import { ProLayout } from './components/ProLayout';
 
 function App() {
   const [showFavoritesModal, setShowFavoritesModal] = useState(false);
@@ -33,7 +34,7 @@ function App() {
   return (
     <MataGatosProvider>
       <FavouritesOwnersProvider>
-        <main className="h-full font-monserrat">
+        <main className="h-full min-h-screen flex flex-col font-monserrat">
           <Nav title={getPageTitle()}  showFavoritesModal={handleShowFavoritesModal} />
           {
             showFavoritesModal && (
@@ -48,6 +49,9 @@ function App() {
             </Route>
             <Route path="/owners">
               <OwnerLayout />
+            </Route>
+            <Route path="/pro">
+              <ProLayout />
             </Route>
           <Footer />
         </main>

@@ -44,7 +44,7 @@ export function OwnerDetails ({ owner, onClose, onSelectFavourite }) {
 
     return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-        <div className="bg-white p-4 rounded w-fit overflow-auto max-w-full max-h-full break-words">
+        <div className="bg-white p-4 rounded w-fit overflow-auto max-w-[600px] max-h-full break-words">
             <p className="flex items-center gap-1">
               <span className="text-lg font-semibold">{name}</span> 
               - {gender}
