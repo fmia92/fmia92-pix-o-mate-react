@@ -7,12 +7,12 @@ export function OwnerItem({ owner, isFavourite, onOwnerClick }) {
       }`}
       onClick={() => onOwnerClick(owner)}
     >
-      <p className="text-lg font-semibold">{owner.name}</p>
-      <p className="italic">{owner.email}</p>
+      <p className=" break-words text-lg font-semibold">{owner.name}</p>
+      <p className=" break-words italic">{owner.email}</p>
       <p>
         {owner.gender}
       </p>
-      <p className={`font-medium ${owner.status === 'active' ? 'text-green-500' : 'text-red-500'}`}>
+      <p className={` break-words font-medium ${owner.status === 'active' ? 'text-green-500' : 'text-red-500'}`}>
         {owner.status}
       </p>
     </div>

@@ -40,15 +40,15 @@ function App() {
               <FavouritesList onClose={() => setShowFavoritesModal(false)} />
             )
           }
-          <Route path="/">
-            <Home />
-          </Route>
-          <Route path="/search">
-            <SearchLayout />
-          </Route>
-          <Route path="/owners">
-            <OwnerLayout />
-          </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+            <Route path="/search">
+              <SearchLayout />
+            </Route>
+            <Route path="/owners">
+              <OwnerLayout />
+            </Route>
           <Footer />
         </main>
       </FavouritesOwnersProvider>

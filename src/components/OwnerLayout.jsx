@@ -56,8 +56,8 @@ export function OwnerLayout () {
     }
 
     return (
-        <section className="flex flex-col items-center justify-center h-full p-4">
-            <div className="border-2 border-gray-300 p-4">
+        <section className="flex flex-col items-center justify-center h-full p-4 max-w-[100vw]">
+            <div className="w-full max-w-md border-2 border-gray-300 p-4">
                 {
                     loading 
                     ? <p>Cargando...</p>
