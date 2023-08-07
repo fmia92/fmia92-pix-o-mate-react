@@ -22,6 +22,8 @@ function App() {
         return 'Owners';
       case '/search':
         return 'Search';
+      case '/pro':
+        return 'Soy Pro';
       default:
         return 'Home';
     }
