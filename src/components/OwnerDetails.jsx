@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useFetchPostsByUserId } from '../hooks/useFetchPostsByUserId'
 import { ManIcon, WomanIcon } from './Icons'
 

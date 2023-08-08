@@ -6,7 +6,6 @@ export const useMataGatos = () => {
   return useContext(mataGatosContext)
 }
 
-// eslint-disable-next-line react/prop-types
 export const MataGatosProvider = ({ children }) => {
   const [killedCats, setKilledCats] = useState(0)
 

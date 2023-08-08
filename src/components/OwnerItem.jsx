@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 export function OwnerItem({ owner, isFavourite, onOwnerClick }) {
   return (
     <div

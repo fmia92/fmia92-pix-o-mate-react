@@ -1,7 +1,6 @@
 import { useFavouritesOwners } from '../context/favouritesOwnersContext'
 import { TrashIcon } from './Icons'
 
-// eslint-disable-next-line react/prop-types
 export function FavouritesList ({ onClose }) {
   const { favoritesData, removeFavouriteOwner } = useFavouritesOwners()
 

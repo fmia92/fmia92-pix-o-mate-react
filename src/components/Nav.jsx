@@ -3,7 +3,6 @@ import { useMataGatos } from '../context/mataGatosContext'
 import { useFavouritesOwners } from '../context/favouritesOwnersContext'
 import { Link } from 'wouter'
 
-// eslint-disable-next-line react/prop-types
 export function Nav ({ title, showFavoritesModal }) {
   const { killedCats } = useMataGatos()
   const { favouritesOwnersCount } = useFavouritesOwners()

@@ -30,7 +30,7 @@ module.exports = {
       'error',
       'never'
     ],
-    'reatc/prop-types': 0,
+    'react/prop-types': 0,
     'react/react-in-jsx-scope': 'off',
   }
 }
