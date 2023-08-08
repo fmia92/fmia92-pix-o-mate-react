@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useFetchPostsByUserId } from '../hooks/useFetchPostsByUserId'
 import { ManIcon, WomanIcon } from './Icons'
 
@@ -5,6 +6,7 @@ export function OwnerDetails ({ owner, onClose, onSelectFavourite }) {
   if (!owner) {
     return null
   }
+
   const { id, status, name, gender, email, created_at  } = owner
 
   const { posts, loading } = useFetchPostsByUserId({userId: id})

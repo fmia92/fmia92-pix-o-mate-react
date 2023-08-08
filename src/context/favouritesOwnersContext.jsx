@@ -6,6 +6,7 @@ export const useFavouritesOwners = () => {
   return useContext(favouritesOwnersContext)
 }
 
+// eslint-disable-next-line react/prop-types
 export const FavouritesOwnersProvider = ({ children }) => {
   const [favoritesData, setFavoritesData] = useState([])
   const [favouritesOwnersCount, setFavouritesOwnersCount] = useState(0)

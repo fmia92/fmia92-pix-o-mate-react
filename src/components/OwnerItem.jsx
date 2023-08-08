@@ -1,4 +1,4 @@
-
+/* eslint-disable react/prop-types */
 export function OwnerItem({ owner, isFavourite, onOwnerClick }) {
   return (
     <div
@@ -16,5 +16,5 @@ export function OwnerItem({ owner, isFavourite, onOwnerClick }) {
         {owner.status}
       </p>
     </div>
-  );
+  )
 }

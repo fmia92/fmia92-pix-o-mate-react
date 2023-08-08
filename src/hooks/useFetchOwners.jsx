@@ -59,6 +59,7 @@ export function useFetchOwners({ searchText }) {
         setLoadingMoreData(false)
       })
       .catch((error) => {
+        console.log(error)
         setLoading(false)
         setLoadingMoreData(false)
       })
