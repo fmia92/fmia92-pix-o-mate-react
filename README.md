@@ -1,4 +1,4 @@
-# 01 - Desarrollo de una Aplicación Web para dueños de gatitos
+# Desarrollo de una Aplicación Web para dueños de gatitos
 
 PIX-O-MATE LOVING KITTENS es una página web formado por usuarios que aman a sus gatos y utilizan esta web para subir las fotos de sus mascotas y escribir posts. 
 Esta web mostrará una lista con datos sobre los dueños de los gatos, los cuáles podrán ser filtrados por nombre y ser añadidos a una lista de favoritos.
@@ -58,7 +58,3 @@ y abra [http://localhost:5173](http://localhost:5173) con su navegador para ver 
 - [React](https://es.react.dev/) con [Vite](https://vitejs.dev/).
 - [Tailwind CSS](https://tailwindcss.com/).
 - [Wouter](https://www.npmjs.com/package/wouter).
-
-
-
-
