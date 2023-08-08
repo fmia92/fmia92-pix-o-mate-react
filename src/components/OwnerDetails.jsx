@@ -69,7 +69,7 @@ export function OwnerDetails ({ owner, onClose, onSelectFavourite }) {
         }
         {
           !loading && posts?.length === 0 && <img className="pt-4 pb-4"
-            src="/public/no_posts.gif" alt="No hay posts" />
+            src="./no_posts.gif" alt="No hay posts" />
         }
         <div className="flex gap-2">
           <button onClick={onSelectFavourite} className="bg-blue-500 text-white mt-2 px-4 py-2 rounded">
