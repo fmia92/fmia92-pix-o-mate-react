@@ -5,5 +5,5 @@ export function Footer() {
         © {new Date().getFullYear()}. Todos pix o mate los derechos reservados.
       </p>
     </footer>
-  );
+  )
 }
