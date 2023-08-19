@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { OwnerItem } from './OwnerItem'
 import { OwnerDetails } from './OwnerDetails'
-import { useFavouritesOwners } from '../context/favouritesOwnersContext'
 import { useFetchOwners } from '../hooks/useFetchOwners'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 
 export function OwnerLayout () {
   const [selectedOwner, setSelectedOwner] = useState(null)
-  const { favoritesData, setFavoritesData } = useFavouritesOwners()
+  const { favouritesOwners, addFavouriteOwner } = useFavouritesOwnersStore()
   const { owners, loading, setPage, hasMoreData } = useFetchOwners({ searchText: '' })
    
   const handleSelectOwner = (owner) => {
@@ -19,11 +19,11 @@ export function OwnerLayout () {
   }
 
   const handleFavouriteEvent = () => {
-    const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
+    const isFavorite = favouritesOwners.some((item) => item.id === selectedOwner.id)
     if (isFavorite) {
       return
     }
-    setFavoritesData(prevState => [...prevState, selectedOwner])
+    addFavouriteOwner(selectedOwner)
     setSelectedOwner(null)
   }
 
@@ -68,7 +68,7 @@ export function OwnerLayout () {
                     <OwnerItem
                       key={owner.id}
                       owner={owner}
-                      isFavourite={favoritesData.some((item) => item.id === owner.id)}
+                      isFavourite={favouritesOwners.some((item) => item.id === owner.id)}
                       onOwnerClick={handleSelectOwner}
                     />
                   ))}

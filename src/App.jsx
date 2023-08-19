@@ -7,8 +7,6 @@ import { SearchLayout } from './components/SearchLayout'
 import { OwnerLayout } from './components/OwnerLayout'
 import { useState } from 'react'
 import { FavouritesList } from './components/FavouritesList'
-import { MataGatosProvider } from './context/mataGatosContext'
-import { FavouritesOwnersProvider } from './context/favouritesOwnersContext'
 import { ProLayout } from './components/ProLayout'
 
 function App() {
@@ -34,8 +32,6 @@ function App() {
   }
 
   return (
-    <MataGatosProvider>
-      <FavouritesOwnersProvider>
         <main className="h-full min-h-screen flex flex-col font-monserrat">
           <Nav title={getPageTitle()}  showFavoritesModal={handleShowFavoritesModal} />
           {
@@ -57,8 +53,6 @@ function App() {
           </Route>
           <Footer />
         </main>
-      </FavouritesOwnersProvider>
-    </MataGatosProvider>
   )
 }
 

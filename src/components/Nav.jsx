@@ -1,11 +1,11 @@
 import { CatIcon, HeartIcon } from './Icons'
-import { useMataGatos } from '../context/mataGatosContext'
-import { useFavouritesOwners } from '../context/favouritesOwnersContext'
+import { useMataGatosStore } from '../context/mataGatosContext'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 import { Link } from 'wouter'
 
 export function Nav ({ title, showFavoritesModal }) {
-  const { killedCats } = useMataGatos()
-  const { favouritesOwnersCount } = useFavouritesOwners()
+  const killedCats = useMataGatosStore((state) => state.killedCats)
+  const countFavouritesOwners = useFavouritesOwnersStore((state) => state.favouritesOwnersCount)
 
   return (
     <header className="bg-gray-300 p-4">
@@ -21,7 +21,7 @@ export function Nav ({ title, showFavoritesModal }) {
         </Link>
         <div className="flex gap-1 items-center" onClick={showFavoritesModal}>
           <HeartIcon className="h-8 w-8 mr-2" />
-          <span className="text-lg font-bold"> {favouritesOwnersCount}</span>
+          <span className="text-lg font-bold"> {countFavouritesOwners}</span>
         </div>
       </nav>
     </header>

@@ -1,25 +1,7 @@
-import { createContext, useContext, useState } from 'react'
+import { create } from 'zustand'
 
-export const mataGatosContext = createContext()
-
-export const useMataGatos = () => {
-  return useContext(mataGatosContext)
-}
-
-export const MataGatosProvider = ({ children }) => {
-  const [killedCats, setKilledCats] = useState(0)
-
-  const increaseKilledCats = () => {
-    setKilledCats(prev => prev + 1)
-  }
-
-  const resetKilledCats = () => {
-    setKilledCats(0)
-  }
-
-  return (
-    <mataGatosContext.Provider value={{ killedCats, increaseKilledCats, resetKilledCats }}>
-      {children}
-    </mataGatosContext.Provider>
-  )
-}
+export const useMataGatosStore = create((set) => ({
+  killedCats: 0,
+  increaseKilledCats: () => set((state) => ({ killedCats: state.killedCats + 1 })),
+  resetKilledCats: () => set({ killedCats: 0 }),
+}));

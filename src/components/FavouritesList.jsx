@@ -1,8 +1,8 @@
-import { useFavouritesOwners } from '../context/favouritesOwnersContext'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 import { TrashIcon } from './Icons'
 
 export function FavouritesList ({ onClose }) {
-  const { favoritesData, removeFavouriteOwner } = useFavouritesOwners()
+  const { favouritesOwners, removeFavouriteOwner } = useFavouritesOwnersStore()
 
   const handleDeleteFavorite = (id) => {
     removeFavouriteOwner(id)
@@ -12,7 +12,7 @@ export function FavouritesList ({ onClose }) {
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white p-4 rounded shadow-md max-w-full overflow-auto">
         <h2 className="text-xl font-bold mb-4">Dueños Favoritos</h2>
-        {favoritesData.length === 0 ? (
+        {favouritesOwners.length === 0 ? (
           <p>No tienes Dueños favoritos aún.</p>
         ) : (
           <table className="table-auto w-full">
@@ -26,7 +26,7 @@ export function FavouritesList ({ onClose }) {
               </tr>
             </thead>
             <tbody>
-              {favoritesData.map((favorite) => (
+              {favouritesOwners.map((favorite) => (
                 <tr key={favorite.id}>
                   <td className="border px-4 py-2">{favorite.name}</td>
                   <td className="border px-4 py-2">{favorite.email}</td>

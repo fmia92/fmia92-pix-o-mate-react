@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { OwnerDetails } from './OwnerDetails'
 import { OwnerItem } from './OwnerItem'
-import { useFavouritesOwners } from '../context/favouritesOwnersContext'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 import { useDebounce } from '../hooks/useDebounce'
 import { useFetchOwners } from '../hooks/useFetchOwners'
 
 export function SearchLayout() {
   const [selectedOwner, setSelectedOwner] = useState(null)
   const [searchText, setSearchText] = useState('')
-  const { favoritesData, setFavoritesData } = useFavouritesOwners()
   const debounceSearchText = useDebounce(searchText, 500)
   const { owners, loading, setPage, hasMoreData, setHasMoreData } = useFetchOwners({ searchText: debounceSearchText })
-
+  const { favouritesOwners, addFavouriteOwner } = useFavouritesOwnersStore() 
 
   // useEffect(() => {
   //     localStorage.setItem("favoritesList", JSON.stringify(favouritesList));
@@ -30,7 +29,7 @@ export function SearchLayout() {
     if (isFavorite) {
       return
     }
-    setFavoritesData(prevState => [...prevState, selectedOwner])
+    addFavouriteOwner(selectedOwner)
     setSelectedOwner(null)
   }
 
@@ -95,7 +94,7 @@ export function SearchLayout() {
                     <OwnerItem
                       key={owner.id}
                       owner={owner}
-                      isFavourite={favoritesData.some((item) => item.id === owner.id)}
+                      isFavourite={favouritesOwners.some((item) => item.id === owner.id)}
                       onOwnerClick={handleSelectOwner}
                     />
                   ))}

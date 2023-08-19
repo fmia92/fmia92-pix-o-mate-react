@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDebounce } from '../hooks/useDebounce'
-import { useFavouritesOwners } from '../context/favouritesOwnersContext'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 import { useFetchOwners } from '../hooks/useFetchOwners'
 import { OwnerItem } from './OwnerItem'
 import { OwnerDetails } from './OwnerDetails'
@@ -8,9 +8,10 @@ import { OwnerDetails } from './OwnerDetails'
 export function ProLayout() {
   const [selectedOwner, setSelectedOwner] = useState(null)
   const [searchText, setSearchText] = useState('')
-  const { favoritesData, setFavoritesData } = useFavouritesOwners()
   const debounceSearchText = useDebounce(searchText, 500)
   const { owners, loading, setPage, hasMoreData, setHasMoreData } = useFetchOwners({ searchText: debounceSearchText })
+  const favouritesOwners = useFavouritesOwnersStore((state) => state.favouritesOwners)
+  const addFavouriteOwner = useFavouritesOwnersStore((state) => state.addFavouriteOwner)
 
   const handleSelectOwner = (owner) => {
     setSelectedOwner(owner)
@@ -25,7 +26,7 @@ export function ProLayout() {
     if (isFavorite) {
       return
     }
-    setFavoritesData(prevState => [...prevState, selectedOwner])
+    addFavouriteOwner(selectedOwner)    
     setSelectedOwner(null)
   }
 
@@ -90,7 +91,7 @@ export function ProLayout() {
                     <OwnerItem
                       key={owner.id}
                       owner={owner}
-                      isFavourite={favoritesData.some((item) => item.id === owner.id)}
+                      isFavourite={favouritesOwners.some((item) => item.id === owner.id)}
                       onOwnerClick={handleSelectOwner}
                     />
                   ))}

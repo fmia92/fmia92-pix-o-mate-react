@@ -1,31 +1,24 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export const favouritesOwnersContext = createContext()
+const storedFavouritesOwners = JSON.parse(localStorage.getItem('favouritesOwners')) || [];
 
-export const useFavouritesOwners = () => {
-  return useContext(favouritesOwnersContext)
-}
-
-export const FavouritesOwnersProvider = ({ children }) => {
-  const [favoritesData, setFavoritesData] = useState([])
-  const [favouritesOwnersCount, setFavouritesOwnersCount] = useState(0)
-
-  useEffect(() => {
-    setFavouritesOwnersCount(favoritesData.length)
-  }, [favoritesData])
-
-  const addFavouriteOwner = (owner) => {
-    setFavoritesData(prevState => [...prevState, owner])
+export const useFavouritesOwnersStore = create(
+  persist(
+    (set) => ({
+    favouritesOwners: storedFavouritesOwners,
+    favouritesOwnersCount: 0,
+    addFavouriteOwner: (owner) => set((state) => ({ 
+      favouritesOwners: [...state.favouritesOwners, owner],
+      favouritesOwnersCount: state.favouritesOwnersCount + 1
+    })),
+    removeFavouriteOwner: (id) => set((state) => ({ 
+      favouritesOwners: state.favouritesOwners.filter((owner) => owner.id !== id),
+      favouritesOwnersCount: state.favouritesOwnersCount - 1
+    }))
+  }),
+  {
+    name: 'favouritesOwners'
   }
-
-  const removeFavouriteOwner = (id) => {
-    setFavoritesData(prevState => prevState.filter((owner) => owner.id !== id))
-  }
-
-  return (
-    <favouritesOwnersContext.Provider value={{ favoritesData, setFavoritesData, favouritesOwnersCount, addFavouriteOwner, removeFavouriteOwner }}>
-      {children}
-    </favouritesOwnersContext.Provider>
-  )
-}
+));
     

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useMataGatos } from '../context/mataGatosContext'
+import { useMataGatosStore } from '../context/mataGatosContext'
 
 export function useFetchPostsByUserId({userId}) {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { increaseKilledCats } = useMataGatos()
+
+  //toDo: Convertir a zustand
+  const increaseKilledCats = useMataGatosStore((state) => state.increaseKilledCats)
+
     
   useEffect(() => {
     const url = `https://gorest.co.in/public/v2/users/${userId}/posts`
