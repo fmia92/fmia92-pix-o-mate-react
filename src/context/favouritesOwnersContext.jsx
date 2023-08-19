@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-const storedFavouritesOwners = JSON.parse(localStorage.getItem('favouritesOwners')) || [];
+const storedFavouritesOwners = JSON.parse(localStorage.getItem('favouritesOwnersStorage')) || [];
 
 export const useFavouritesOwnersStore = create(
   persist(
@@ -18,7 +18,7 @@ export const useFavouritesOwnersStore = create(
     }))
   }),
   {
-    name: 'favouritesOwners'
+    name: 'favouritesOwnersStorage'
   }
 ));
     
