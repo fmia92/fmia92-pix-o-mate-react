@@ -1,4 +1,4 @@
-import './App.css'
+  import './App.css'
 import { Nav } from './components/Nav'
 import { Route, useLocation } from 'wouter'
 import { Home } from './components/Home'
@@ -8,6 +8,8 @@ import { OwnerLayout } from './components/OwnerLayout'
 import { useState } from 'react'
 import { FavouritesList } from './components/FavouritesList'
 import { ProLayout } from './components/ProLayout'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
   const [showFavoritesModal, setShowFavoritesModal] = useState(false)
@@ -31,7 +33,11 @@ function App() {
     setShowFavoritesModal(true)
   }
 
+  const queryClient = new QueryClient()
+
   return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
         <main className="h-full min-h-screen flex flex-col font-monserrat">
           <Nav title={getPageTitle()}  showFavoritesModal={handleShowFavoritesModal} />
           {
@@ -48,11 +54,12 @@ function App() {
           <Route path="/owners">
             <OwnerLayout />
           </Route>
-          <Route path="/pro">
+          {/* <Route path="/pro">
             <ProLayout />
-          </Route>
+          </Route> */}
           <Footer />
         </main>
+    </QueryClientProvider>
   )
 }
 
