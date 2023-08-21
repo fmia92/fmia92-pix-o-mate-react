@@ -8,7 +8,7 @@ export function Nav ({ title, showFavoritesModal }) {
   const countFavouritesOwners = useFavouritesOwnersStore((state) => state.favouritesOwnersCount)
 
   return (
-    <header className="bg-gray-300 p-4">
+    <header className=" border-gray-200 text-white bg-[#1b263b] p-4">
       <nav className='flex justify-between items-center'>
         <div className="flex gap-1 items-center">
           <CatIcon className="h-8 w-8 mr-2"/>
