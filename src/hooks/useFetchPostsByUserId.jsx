@@ -9,7 +9,6 @@ export function useFetchPostsByUserId({userId}) {
   //toDo: Convertir a zustand
   const increaseKilledCats = useMataGatosStore((state) => state.increaseKilledCats)
 
-    
   useEffect(() => {
     const url = `https://gorest.co.in/public/v2/users/${userId}/posts`
 
