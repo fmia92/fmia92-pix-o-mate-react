@@ -15,6 +15,10 @@ export const useFavouritesOwnersStore = create(
     removeFavouriteOwner: (id) => set((state) => ({ 
       favouritesOwners: state.favouritesOwners.filter((owner) => owner.id !== id),
       favouritesOwnersCount: state.favouritesOwnersCount - 1
+    })),
+    resetFavouritesOwners: () => set((state) => ({
+      favouritesOwners: [],
+      favouritesOwnersCount: 0
     }))
   }),
   {

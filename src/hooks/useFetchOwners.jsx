@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useMataGatosStore } from '../context/mataGatosContext'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useFavouritesOwnersStore } from '../context/favouritesOwnersContext'
 
 const generateRamdomTimestamp = () => {
   const from = new Date('2020-01-01').getTime()
@@ -58,6 +59,7 @@ async function fetchOwners({ pageParam = 1, searchText }) {
 
 export const useFetchOwners = ({ searchText }) => {
   const { increaseKilledCats } = useMataGatosStore();
+  const resetFavouritesOwners = useFavouritesOwnersStore((state) => state.resetFavouritesOwners)
 
   const { data, isLoading, error, isFetching, hasNextPage, fetchNextPage, refetch } = useInfiniteQuery(
     ['owners', {searchText}],
@@ -98,6 +100,7 @@ export const useFetchOwners = ({ searchText }) => {
       const hour = now.getHours();
       if ((day === 1 || day === 4) && hour === 0) {
         refetch();
+        resetFavouritesOwners();
       }
     }, 60 * 60 * 1000);
     return () => clearInterval(dayInterval);
