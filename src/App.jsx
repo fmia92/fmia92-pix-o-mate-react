@@ -54,9 +54,9 @@ function App() {
           <Route path="/owners">
             <OwnerLayout />
           </Route>
-          {/* <Route path="/pro">
+          <Route path="/pro">
             <ProLayout />
-          </Route> */}
+          </Route>
           <Footer />
         </main>
     </QueryClientProvider>

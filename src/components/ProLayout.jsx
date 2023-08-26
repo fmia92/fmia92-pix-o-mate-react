@@ -9,9 +9,8 @@ export function ProLayout() {
   const [selectedOwner, setSelectedOwner] = useState(null)
   const [searchText, setSearchText] = useState('')
   const debounceSearchText = useDebounce(searchText, 500)
-  const { owners, loading, setPage, hasMoreData, setHasMoreData } = useFetchOwners({ searchText: debounceSearchText })
-  const favouritesOwners = useFavouritesOwnersStore((state) => state.favouritesOwners)
-  const addFavouriteOwner = useFavouritesOwnersStore((state) => state.addFavouriteOwner)
+  const { owners, hasNextPage, error, isFetching, isLoading, fetchNextPage } = useFetchOwners({ searchText: debounceSearchText })
+  const { favouritesOwners, addFavouriteOwner } = useFavouritesOwnersStore() 
 
   const handleSelectOwner = (owner) => {
     setSelectedOwner(owner)
@@ -22,7 +21,7 @@ export function ProLayout() {
   }
 
   const handleFavouriteEvent = () => {
-    const isFavorite = favoritesData.some((item) => item.id === selectedOwner.id)
+    const isFavorite = favouritesOwners.some((item) => item.id === selectedOwner.id)
     if (isFavorite) {
       return
     }
@@ -33,43 +32,21 @@ export function ProLayout() {
   const handleChangeSearchText = (e) => {
     if (e.target.value.length >= 2) {
       setSearchText(e.target.value.trim())
-      setHasMoreData(true)
-      setPage(1)
     } else if (e.target.value.length === 0) {
       setSearchText('')
-      setHasMoreData(true)
-      setPage(1)
     }
   }
-
-  const debouncedSetPage = useCallback(
-    debounce(() => {
-      setPage((prev) => prev + 1)
-    }, 200),
-    []
-  )
-
-  const handleScroll = useCallback(() => {
-    if (hasMoreData && !loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
-      debouncedSetPage()
+  const handleScroll = () => {
+    if (hasNextPage && !isFetching && window.innerHeight + window.scrollY >= document.body.offsetHeight - 400) {
+      fetchNextPage()
     }
-  }, [hasMoreData, loading, debouncedSetPage])
+  }
 
   useEffect(() => {
     // Escuchar el evento scroll para cargar más dueños cuando sea necesario
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
-
-  function debounce(func, delay) {
-    let timeout
-    return function (...args) {
-      const context = this
-      clearTimeout(timeout)
-      timeout = setTimeout(() => func.apply(context, args), delay)
-    }
-  }
-    
   return (
     <section className="flex flex-col items-center justify-center h-full p-4">
       <div className="border-2 border-gray-300 p-4">
@@ -82,7 +59,7 @@ export function ProLayout() {
           />
         </div>
         {
-          loading 
+          isLoading  
             ? <p>Cargando...</p>
             : (
               <>
